@@ -22,10 +22,10 @@ c = 0
 def createMatrix():
     for i in range(0, n):
         for j in range(0, n):
-            # A[i][j] = randint(0, 3)
-            # B[i][j] = randint(0, 3)
-            A[i][j] = i*j
-            B[i][j] = 1
+            A[i][j] = randint(0, 1)
+            B[i][j] = randint(0, 1)
+            # A[i][j] = i*j
+            # B[i][j] = 1
     
 if processId == master:
     createMatrix()
@@ -42,7 +42,8 @@ up = 0
 A = np.asarray(A).reshape(-1)
 B = np.asarray(B).reshape(-1)
 
-start = MPI.Wtime()
+if processId == master:
+    start = MPI.Wtime()
 
 if processId != master:
     A = None
@@ -102,9 +103,9 @@ for i in range(1, n):
 C = communicator.gather(c, root=master)
 # communicator.Barrier()
 
-end = MPI.Wtime()
-
-timeInSeconds = end - start
+if processId == master:
+    end = MPI.Wtime()
+    timeInSeconds = end - start
 
 if processId == master:
     for i, c in enumerate(C):
